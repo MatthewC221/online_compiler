@@ -2,5 +2,5 @@
 /node_modules/*
 /uikit/*
 /codemirror/*
-!/codemirror/lib
+!/codemirror/lib/codemirror.css
 /package-lock.json
