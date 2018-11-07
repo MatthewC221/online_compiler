@@ -1,0 +1,32 @@
+{
+  "name": "angular_practice",
+  "version": "0.0.0",
+  "description": "angular_practice",
+  "main": "server.js",
+  "author": {
+    "name": "mchen"
+  },
+  "scripts": {
+    "pretest": "eslint --ignore-path .gitignore .; exit 0;"
+  },
+  "engines": {
+    "node": "9.4.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "codemirror": "^5.41.0",
+    "compression": "^1.7.2",
+    "connect-flash": "~0.1.1",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.0",
+    "express-session": "^1.15.6",
+    "foundation-sites": "^6.5.0",
+    "marked": "^0.5.1",
+    "uikit": "^3.0.0-rc.20"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-strongloop": "^2.1.0"
+  }
+}

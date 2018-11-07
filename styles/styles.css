@@ -1,0 +1,47 @@
+.banner {
+    height: 50px;
+}
+
+.whiteIcon {
+    color: white;
+}
+
+.default-navbar {
+    height: 50px;
+}
+
+.homePageIcon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 75px;
+    width: 75px;
+}
+
+.centredImage {
+    display: block;
+    margin-left: 15px;
+}
+
+.CodeMirror { 
+    border: 1px solid #ddd; 
+    height: auto;
+}
+/*.CodeMirror-scroll { max-height: 200px; }*/
+
+.CodeMirror pre { 
+    padding-left: 7px; 
+    line-height: 1.25; 
+}
+
+.codeEditor {
+    margin-top: -15px;
+    padding-right: 10px;
+    display: block;
+}
+
+.codeOutput {
+    padding-right: 10px;
+    padding-left: 10px;
+    display: block;
+}

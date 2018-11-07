@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+    <link rel="stylesheet" type="text/css" href="uikit/dist/css/uikit.min.css" />
+    <link rel=stylesheet type="text/css" href="doc/docs.css">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="lib/codemirror.css">
+    <script src="lib/codemirror.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="uikit/dist/js/uikit.min.js"></script>
+    <script src="uikit/dist/js/uikit-icons.min.js"></script>
+    <script src="lib/codemirror.js"></script>
+    <script src="mode/python/python.js"></script>
+    <script src="mode/xml/xml.js"></script>
+    <script src="mode/javascript/javascript.js"></script>
+    <script src="mode/css/css.js"></script>
+    <script src="mode/htmlmixed/htmlmixed.js"></script>
+    <script src="addon/edit/matchbrackets.js"></script>
+</head>
+<body>
+    <div class="uk-width uk-text-center">
+        <div class="banner uk-background-secondary uk-light">
+            <p class="uk-h4">
+                <span class="whiteIcon" uk-icon="xing"></span>
+                Codelive
+            </p>
+        </div>
+    </div>
+    <div class="uk-grid">
+        <div class="uk-width-1-5 text-center">
+            <img class="centredImage" data-src="icon_directory.png" width="25%" height="25%" alt="" uk-img>
+        </div>
+        <div class="uk-width-4-5 codeEditor">
+            <section id=demo>
+                <textarea id=demotext autofocus></textarea>
+                    <!-- <select id="demolist" onchange="document.location = this.options[this.selectedIndex].value;">
+                    <option value="#">Other demos...</option>
+                    <option value="demo/complete.html">Autocompletion</option>
+                    <option value="demo/folding.html">Code folding</option>
+                    <option value="demo/theme.html">Themes</option>
+                    <option value="mode/htmlmixed/index.html">Mixed language modes</option>
+                    <option value="demo/bidi.html">Bi-directional text</option>
+                    <option value="demo/variableheight.html">Variable font sizes</option>
+                    <option value="demo/search.html">Search interface</option>
+                    <option value="demo/vim.html">Vim bindings</option>
+                    <option value="demo/emacs.html">Emacs bindings</option>
+                    <option value="demo/sublime.html">Sublime Text bindings</option>
+                    <option value="demo/tern.html">Tern integration</option>
+                    <option value="demo/merge.html">Merge/diff interface</option>
+                    <option value="demo/fullscreen.html">Full-screen editor</option>
+                    <option value="demo/simplescrollbars.html">Custom scrollbars</option>
+                </select></form> -->
+                <script>
+                    var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
+                        lineNumbers: true,
+                        mode: "text/html",
+                        matchBrackets: true,
+                        indentUnit: 4,
+                        smartIndent: true,
+                        lineWrapping: true,
+                        mode: {name: "python",
+                               version: 3,
+                               singleLineStringErrors: false},
+                    });
+                </script>
+            </section>
+            <button class="uk-button uk-button-default">Compile</button>
+            <button class="uk-button uk-button-primary" id="run">Run</button>
+        </div>
+    </div>
+    <div class="uk-grid-collapse">
+        <div class="uk-width-1-1 codeOutput">
+            <b>Standard output</b>
+            <textarea class="uk-textarea" rows="4" readonly>$ python main.py</textarea>
+        </div>
+    </div>
+    <script>
+        $("#run").click(function() {
+            // XMLHttpRequest (send and receive - responseText)
+            alert("Handler for .click() called");
+        });
+    </script>
+</body>
+</html>
