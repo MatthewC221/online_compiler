@@ -25,7 +25,6 @@
 
 .CodeMirror { 
     border: 1px solid #ddd; 
-    height: auto;
 }
 /*.CodeMirror-scroll { max-height: 200px; }*/
 
@@ -43,5 +42,7 @@
 .codeOutput {
     padding-right: 10px;
     padding-left: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
     display: block;
 }

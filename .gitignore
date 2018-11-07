@@ -1,5 +1,6 @@
-icons/
-node_modules/
-uikit/
-codemirror/
-package-lock.json
+/icons/*
+/node_modules/*
+/uikit/*
+/codemirror/*
+!/codemirror/lib
+/package-lock.json

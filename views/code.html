@@ -34,7 +34,8 @@
         </div>
         <div class="uk-width-4-5 codeEditor">
             <section id=demo>
-                <textarea id=demotext autofocus></textarea>
+                <!-- This is a bad hack (always starts at 20 lines) -->
+                <textarea id=codeEditor autofocus></textarea>
                     <!-- <select id="demolist" onchange="document.location = this.options[this.selectedIndex].value;">
                     <option value="#">Other demos...</option>
                     <option value="demo/complete.html">Autocompletion</option>
@@ -52,19 +53,6 @@
                     <option value="demo/fullscreen.html">Full-screen editor</option>
                     <option value="demo/simplescrollbars.html">Custom scrollbars</option>
                 </select></form> -->
-                <script>
-                    var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
-                        lineNumbers: true,
-                        mode: "text/html",
-                        matchBrackets: true,
-                        indentUnit: 4,
-                        smartIndent: true,
-                        lineWrapping: true,
-                        mode: {name: "python",
-                               version: 3,
-                               singleLineStringErrors: false},
-                    });
-                </script>
             </section>
             <button class="uk-button uk-button-default">Compile</button>
             <button class="uk-button uk-button-primary" id="run">Run</button>
@@ -77,6 +65,20 @@
         </div>
     </div>
     <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), {
+            lineNumbers: true,
+            mode: "text/html",
+            matchBrackets: true,
+            indentUnit: 4,
+            smartIndent: true,
+            lineWrapping: true,
+            scrollbarStyle: "null",
+            mode: {name: "python",
+                   version: 3,
+                   singleLineStringErrors: false},
+        });
+
+        editor.setValue("\n\n\n\n\n");
         $("#run").click(function() {
             // XMLHttpRequest (send and receive - responseText)
             alert("Handler for .click() called");
