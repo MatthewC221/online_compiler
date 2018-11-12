@@ -4,3 +4,4 @@
 /codemirror/*
 !/codemirror/lib/codemirror.css
 /package-lock.json
+/exe/*

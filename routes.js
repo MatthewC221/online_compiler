@@ -6,6 +6,8 @@ var https           = require('https');
 var path_module     = require('path');
 var session         = require('express-session');
 var shell           = require('shelljs');
+var fs              = require('fs');
+ var exec           = require('child_process').exec, child;
 
 var routes = express.Router({ mergeParams: true });
 var path = __dirname + '/views/';
@@ -19,18 +21,19 @@ routes.get("/code", function (req, res) {
 });
 
 routes.post("/run", function (req, res) {
-    // Will only run once
-    var stringCode;
-    for (var key in req.body) {
-        stringCode = key;
-    }
-    console.log(stringCode);
-    var exec = require('child_process').exec, child;
-
-    // const shell = require('shelljs');
-     //shell.exec(comandToExecute, {silent:true}).stdout;
-     //you need little improvisation
-     shell.exec('dir')
+    fs.writeFile("./exe/main.py", req.body.code, function(err) {
+        if (err) {
+            return console.log(err);
+        }
+        exec('python2 "./exe/main.py"', function (code, stdout, stderr) {
+            var response = {
+                status: 200,
+                success: "Code output success",
+                contents: stderr.length ? stderr : stdout // stderr takes priority
+            }
+            res.end(JSON.stringify(response));
+        });
+    });
 });
 
 module.exports = routes;

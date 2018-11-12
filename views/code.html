@@ -61,11 +61,12 @@
     <div class="uk-grid-collapse">
         <div class="uk-width-1-1 codeOutput">
             <b>Standard output</b>
-            <textarea class="uk-textarea" rows="4" readonly>$ python main.py</textarea>
+            <textarea class="uk-textarea" rows="4" id="output" readonly></textarea>
         </div>
     </div>
     <script>
-        var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), {
+        var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), 
+        {
             lineNumbers: true,
             mode: "text/html",
             matchBrackets: true,
@@ -73,23 +74,26 @@
             smartIndent: true,
             lineWrapping: true,
             scrollbarStyle: "null",
-            mode: {name: "python",
-                   version: 3,
-                   singleLineStringErrors: false},
+            mode: {
+                name: "python",
+                version: 3,
+                singleLineStringErrors: false
+            },
         });
 
         $("#run").click(function() {
-            // XMLHttpRequest (send and receive - responseText)
-            var http = new XMLHttpRequest();
-            http.open("POST", "/run", true);
-            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            http.onreadystatechange = function() { //Call a function when the state changes.
-                if(http.readyState == 4 && http.status == 200) {
-                    alert(http.responseText);
+            $.ajax({
+                type: "POST",
+                url: "/run",
+                data: {
+                    "code": editor.getValue(),
+                },
+                dataType: "json",
+                success: function (result) {
+                    var output = result.contents;
+                    document.getElementById("output").value = output.slice(0, -2);
                 }
-            }
-            // http.send(JSON.stringify({ x: 5, y: 6 }));
-            http.send(editor.getValue());
+            });
         });
     </script>
 </body>
