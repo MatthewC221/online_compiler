@@ -25,7 +25,7 @@ routes.post("/run", function (req, res) {
         if (err) {
             return console.log(err);
         }
-        exec('python "./exe/runner.py"', function (code, stdout, stderr) {
+        exec('python "runner.py"', function (code, stdout, stderr) {
             var response = {
                 status: 200,
                 success: "Code output success",
