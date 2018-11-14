@@ -5,3 +5,4 @@
 !/codemirror/lib/codemirror.css
 /package-lock.json
 /exe/*
+/old/*

@@ -4,3 +4,8 @@ Concerns about multi file projects, writing all of files to environment and exec
 
 json - lesson
 Where can we store the lesson, in a database?
+
+TODO:
+- Fix case of not print stderr:
+while (1):
+    print "!"
