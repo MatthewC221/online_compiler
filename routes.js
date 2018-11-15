@@ -26,10 +26,21 @@ routes.post("/run", function (req, res) {
             return console.log(err);
         }
         exec('python "runner.py"', function (code, stdout, stderr) {
+
+            var outputType;
+            var contents;
+            if (stderr.length) {
+                outputType = "stderr";
+                contents = stderr;
+            } else {
+                outputType = "stdout"
+                contents = stdout;
+            }
             var response = {
                 status: 200,
                 success: "Code output success",
-                contents: stderr.length ? stderr : stdout // stderr takes priority
+                outputType: outputType,
+                contents: contents // stderr takes priority
             }
             res.end(JSON.stringify(response));
         });

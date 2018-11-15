@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
     <link rel="stylesheet" type="text/css" href="lib/codemirror.css">
     <script src="lib/codemirror.js"></script>
+    <!-- <script src="keymap/sublime.js"></script> -->
+    <!-- <script src="addon/comment/comment.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="uikit/dist/js/uikit.min.js"></script>
     <script src="uikit/dist/js/uikit-icons.min.js"></script>
@@ -30,13 +32,16 @@
     </div>
     <div class="uk-grid">
         <div class="uk-width-1-5 text-center">
-            <img class="centredImage" data-src="icon_directory.png" width="25%" height="25%" alt="" uk-img>
+<!--             <img class="centredImage" data-src="icon_directory.png" width="25%" height="25%" alt="" uk-img> -->
+                <button class="uk-button uk-button-danger exerciseButton">Button</button>
+                <button class="uk-button uk-button-danger exerciseButton">Button</button>
+                <button class="uk-button uk-button-danger exerciseButton">Button</button>
         </div>
         <div class="uk-width-4-5 codeEditor">
             <section id=demo>
                 <!-- This is a bad hack (always starts at 20 lines) -->
                 <textarea id=codeEditor autofocus></textarea>
-                    <!-- <select id="demolist" onchange="document.location = this.options[this.selectedIndex].value;">
+<!--                     <select id="demolist" onchange="document.location = this.options[this.selectedIndex].value;">
                     <option value="#">Other demos...</option>
                     <option value="demo/complete.html">Autocompletion</option>
                     <option value="demo/folding.html">Code folding</option>
@@ -62,10 +67,13 @@
         <div class="uk-width-1-1 codeOutput">
             <b>Standard output</b>
             <textarea class="uk-textarea" rows="5" id="output" readonly></textarea>
-            <div class="uk-text-meta" >Execution state</div>
+            <div class="uk-text-meta executionInfo">Execution state: <div class="uk-text-meta executionInfo" id="executionState"> </div>
+            </div>
         </div>
     </div>
-    <script>
+    <script type="module">
+        import './keymap/sublime.js'; // <===== Imports
+        import './addon/comment/comment.js';
         var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), 
         {
             lineNumbers: true,
@@ -75,6 +83,7 @@
             smartIndent: true,
             lineWrapping: true,
             scrollbarStyle: "null",
+            keyMap: "sublime",
             mode: {
                 name: "python",
                 version: 3,
@@ -83,6 +92,7 @@
         });
 
         $("#run").click(function() {
+            document.getElementById("run").disabled = true;
             $.ajax({
                 type: "POST",
                 url: "/run",
@@ -91,8 +101,19 @@
                 },
                 dataType: "json",
                 success: function (result) {
-                    var output = result.contents;
-                    document.getElementById("output").value = output.slice(0, -2);
+                    var contents = result.contents;
+                    var outputType = result.outputType;
+                    document.getElementById("output").value = contents.slice(0, -2);
+
+                    var executionState = document.getElementById("executionState");
+                    if (outputType === "stderr") {
+                        executionState.innerHTML = "FAILURE";
+                        executionState.style = "color: red";
+                    } else {
+                        executionState.innerHTML = "SUCCESS";
+                        executionState.style = "color: green";
+                    }
+                    document.getElementById("run").disabled = false;
                 }
             });
         });

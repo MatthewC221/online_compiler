@@ -46,3 +46,21 @@
     font-size: 14px;
     display: block;
 }
+
+.uk-textarea {
+    background-color: #282C34;
+    color: #FFFFFF;
+}
+
+.executionInfo {
+    display: inline;
+}
+
+.exerciseButton {
+    /*margin-top: 10px;*/
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    /*margin-bottom: 0;*/
+    display: block;
+}
