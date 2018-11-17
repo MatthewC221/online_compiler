@@ -9,3 +9,7 @@ TODO:
 - Fix case of not print stderr:
 while (1):
     print "!"
+
+16/11/18
+
+Thinking of definitely scrapping the multiple files for MVP, exercises should be one file for now.

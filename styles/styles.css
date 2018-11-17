@@ -2,7 +2,11 @@
     height: 50px;
 }
 
-.whiteIcon {
+.body {
+    background-color: white;
+}
+
+.logoIcon {
     color: white;
 }
 
@@ -34,15 +38,13 @@
 }
 
 .codeEditor {
-    margin-top: -15px;
-    padding-right: 10px;
+    margin-top: -22px;
     display: block;
 }
 
 .codeOutput {
-    padding-right: 10px;
-    padding-left: 10px;
-    padding-bottom: 10px;
+    padding-top: 0px;
+    min-height: 80vh;
     font-size: 14px;
     display: block;
 }
@@ -63,4 +65,17 @@
     margin-right: auto;
     /*margin-bottom: 0;*/
     display: block;
+}
+
+.runProgramButtons {
+    background-color: white;
+    border: none;
+}
+
+.smallHeightArgs {
+    height: 4vh;
+}
+
+.mediumHeightNav {
+    height: 6vh;
 }

@@ -8,8 +8,6 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
     <link rel="stylesheet" type="text/css" href="lib/codemirror.css">
     <script src="lib/codemirror.js"></script>
-    <!-- <script src="keymap/sublime.js"></script> -->
-    <!-- <script src="addon/comment/comment.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="uikit/dist/js/uikit.min.js"></script>
     <script src="uikit/dist/js/uikit-icons.min.js"></script>
@@ -21,59 +19,57 @@
     <script src="mode/htmlmixed/htmlmixed.js"></script>
     <script src="addon/edit/matchbrackets.js"></script>
 </head>
-<body>
+<body style="background-color: white">
     <div class="uk-width uk-text-center">
         <div class="banner uk-background-secondary uk-light">
             <p class="uk-h4">
-                <span class="whiteIcon" uk-icon="xing"></span>
+                <span class="logoIcon" uk-icon="xing"></span>
                 Codelive
             </p>
         </div>
     </div>
-    <div class="uk-grid">
-        <div class="uk-width-1-5 text-center">
-<!--             <img class="centredImage" data-src="icon_directory.png" width="25%" height="25%" alt="" uk-img> -->
-                <button class="uk-button uk-button-danger exerciseButton">Button</button>
-                <button class="uk-button uk-button-danger exerciseButton">Button</button>
-                <button class="uk-button uk-button-danger exerciseButton">Button</button>
+    <nav class="uk-navbar-container default-navbar mediumHeightNav" uk-navbar>
+        <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><a href="/code">Start coding</a></li>
+                <li><a href="#">Item</a></li>
+            </ul>
         </div>
-        <div class="uk-width-4-5 codeEditor">
+    </nav>
+    <div class="uk-grid-collapse" uk-grid>
+        <div class="uk-width-1-2 codeEditor">
             <section id=demo>
-                <!-- This is a bad hack (always starts at 20 lines) -->
-                <textarea id=codeEditor autofocus></textarea>
-<!--                     <select id="demolist" onchange="document.location = this.options[this.selectedIndex].value;">
-                    <option value="#">Other demos...</option>
-                    <option value="demo/complete.html">Autocompletion</option>
-                    <option value="demo/folding.html">Code folding</option>
-                    <option value="demo/theme.html">Themes</option>
-                    <option value="mode/htmlmixed/index.html">Mixed language modes</option>
-                    <option value="demo/bidi.html">Bi-directional text</option>
-                    <option value="demo/variableheight.html">Variable font sizes</option>
-                    <option value="demo/search.html">Search interface</option>
-                    <option value="demo/vim.html">Vim bindings</option>
-                    <option value="demo/emacs.html">Emacs bindings</option>
-                    <option value="demo/sublime.html">Sublime Text bindings</option>
-                    <option value="demo/tern.html">Tern integration</option>
-                    <option value="demo/merge.html">Merge/diff interface</option>
-                    <option value="demo/fullscreen.html">Full-screen editor</option>
-                    <option value="demo/simplescrollbars.html">Custom scrollbars</option>
-                </select></form> -->
+                <textarea id=codeEditor autofocus style="visibility: hidden"></textarea>
             </section>
-            <button class="uk-button uk-button-default">Compile</button>
-            <button class="uk-button uk-button-primary" id="run">Run</button>
+            <input class="uk-input smallHeightArgs" type="text" id="args" placeholder="Command line args">
+            <div class="uk-text-center">
+                <button id="runArgs" class="runProgramButtons">
+                    <span uk-icon="play"></span>
+                </button>
+                <button class="runProgramButtons">
+                    <span uk-icon="code"></span>
+                </button>
+                <button class="runProgramButtons">
+                    <span uk-icon="bolt"></span>
+                </button>
+                <button class="runProgramButtons">
+                    <span uk-icon="info"></span>
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="uk-grid-collapse">
-        <div class="uk-width-1-1 codeOutput">
-            <b>Standard output</b>
-            <textarea class="uk-textarea" rows="5" id="output" readonly></textarea>
-            <div class="uk-text-meta executionInfo">Execution state: <div class="uk-text-meta executionInfo" id="executionState"> </div>
+        <div class="uk-width-1-2">
+            <textarea class="uk-textarea codeOutput" rows="5" id="output" readonly></textarea>
+            <div class="uk-text-meta executionInfo">Execution state: 
+                <div class="uk-text-meta executionInfo" id="executionState"> 
+                </div>
             </div>
         </div>
     </div>
     <script type="module">
-        import './keymap/sublime.js'; // <===== Imports
+        import './keymap/sublime.js';
         import './addon/comment/comment.js';
+        var pythonRunner = "python ./main.py ";
+
         var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), 
         {
             lineNumbers: true,
@@ -82,7 +78,7 @@
             indentUnit: 4,
             smartIndent: true,
             lineWrapping: true,
-            scrollbarStyle: "null",
+            indentWithTabs: true,
             keyMap: "sublime",
             mode: {
                 name: "python",
@@ -91,19 +87,22 @@
             },
         });
 
-        $("#run").click(function() {
-            document.getElementById("run").disabled = true;
+        $("#runArgs").click(function() {
+            document.getElementById("runArgs").disabled = true;
+            var args = document.getElementById("args").value;
+            document.getElementById("output").value = pythonRunner + args + "\n";
             $.ajax({
                 type: "POST",
                 url: "/run",
                 data: {
                     "code": editor.getValue(),
+                    "args": document.getElementById("args").value
                 },
                 dataType: "json",
                 success: function (result) {
                     var contents = result.contents;
                     var outputType = result.outputType;
-                    document.getElementById("output").value = contents.slice(0, -2);
+                    document.getElementById("output").value += contents.slice(0, -2);
 
                     var executionState = document.getElementById("executionState");
                     if (outputType === "stderr") {
@@ -113,7 +112,7 @@
                         executionState.innerHTML = "SUCCESS";
                         executionState.style = "color: green";
                     }
-                    document.getElementById("run").disabled = false;
+                    document.getElementById("runArgs").disabled = false;
                 }
             });
         });

@@ -10,7 +10,8 @@ def kill(proc_pid):
         proc.kill()
     process.kill()
 
-proc = subprocess.Popen(["python", "exe\\main.py"], shell=True)
+subprocessCommand = ["python", "exe\\main.py"] +sys.argv[1:]
+proc = subprocess.Popen(subprocessCommand, shell=True)
 try:
     proc.wait(timeout=10)
 except subprocess.TimeoutExpired:

@@ -25,7 +25,8 @@ routes.post("/run", function (req, res) {
         if (err) {
             return console.log(err);
         }
-        exec('python "runner.py"', function (code, stdout, stderr) {
+        var command = "python runner.py " + req.body.args;
+        exec(command, function (code, stdout, stderr) {
 
             var outputType;
             var contents;
