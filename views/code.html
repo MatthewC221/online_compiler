@@ -21,14 +21,18 @@
 </head>
 <body style="background-color: white">
     <div class="uk-width uk-text-center">
-        <div class="banner uk-background-secondary uk-light">
-            <p class="uk-h4">
-                <span class="logoIcon" uk-icon="xing"></span>
-                Codelive
-            </p>
+        <div class="uk-background-secondary uk-light banner">
+            <a href="/">
+                <img src="logo.png" class="mainLogo"></img>
+            </a>
         </div>
     </div>
     <nav class="uk-navbar-container default-navbar mediumHeightNav" uk-navbar>
+        <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+                <li><a href="/">Save</a></li>
+            </ul>
+        </div>
         <div class="uk-navbar-right">
             <ul class="uk-navbar-nav">
                 <li class="uk-active"><a href="/code">Start coding</a></li>
@@ -39,7 +43,7 @@
     <div class="uk-grid-collapse" uk-grid>
         <div class="uk-width-1-2 codeEditor">
             <section id=demo>
-                <textarea id=codeEditor autofocus style="visibility: hidden"></textarea>
+                <textarea id=codeEditor autofocus style="display: none"></textarea>
             </section>
             <input class="uk-input smallHeightArgs" type="text" id="args" placeholder="Command line args">
             <div class="uk-text-center">
@@ -59,6 +63,8 @@
         </div>
         <div class="uk-width-1-2">
             <textarea class="uk-textarea codeOutput" rows="5" id="output" readonly></textarea>
+            <span uk-icon="minus-circle" id="nonSpinningCircle"></span>
+            <span uk-spinner="ratio: 0.6" id="spinningCircle" class="spinningCircle" style="display: none"></span>
             <div class="uk-text-meta executionInfo">Execution state: 
                 <div class="uk-text-meta executionInfo" id="executionState"> 
                 </div>
@@ -68,8 +74,9 @@
     <script type="module">
         import './keymap/sublime.js';
         import './addon/comment/comment.js';
-        var pythonRunner = "python ./main.py ";
-
+        var PYTHON_RUNNER = "python ./main.py ";
+        var DISPLAY_NONE = "display: none";
+        var DISPLAY_INLINE_BLOCK = "display: inline-block";
         var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), 
         {
             lineNumbers: true,
@@ -88,9 +95,11 @@
         });
 
         $("#runArgs").click(function() {
-            document.getElementById("runArgs").disabled = true;
             var args = document.getElementById("args").value;
-            document.getElementById("output").value = pythonRunner + args + "\n";
+            document.getElementById("runArgs").disabled = true;
+            document.getElementById("output").value = PYTHON_RUNNER + args + "\n";
+            document.getElementById("nonSpinningCircle").style = DISPLAY_NONE;
+            document.getElementById("spinningCircle").style = DISPLAY_INLINE_BLOCK;
             $.ajax({
                 type: "POST",
                 url: "/run",
@@ -102,7 +111,7 @@
                 success: function (result) {
                     var contents = result.contents;
                     var outputType = result.outputType;
-                    document.getElementById("output").value += contents.slice(0, -2);
+                    document.getElementById("output").value += contents;
 
                     var executionState = document.getElementById("executionState");
                     if (outputType === "stderr") {
@@ -113,6 +122,8 @@
                         executionState.style = "color: green";
                     }
                     document.getElementById("runArgs").disabled = false;
+                    document.getElementById("nonSpinningCircle").style = DISPLAY_INLINE_BLOCK;
+                    document.getElementById("spinningCircle").style = DISPLAY_NONE;
                 }
             });
         });

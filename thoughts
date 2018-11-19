@@ -1,14 +1,16 @@
+TODO BUGS:
+- Fix case of not print stderr:
+while (1):
+    print "!"
+
+- What's up with the extra new line in printing on windows, legitimately weird
+
 12/11/18
 
 Concerns about multi file projects, writing all of files to environment and executing. What's the latency for that?
 
 json - lesson
 Where can we store the lesson, in a database?
-
-TODO:
-- Fix case of not print stderr:
-while (1):
-    print "!"
 
 16/11/18
 

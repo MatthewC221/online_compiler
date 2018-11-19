@@ -10,10 +10,10 @@ def kill(proc_pid):
         proc.kill()
     process.kill()
 
-subprocessCommand = ["python", "exe\\main.py"] +sys.argv[1:]
+subprocessCommand = ["python", "exe\\main.py"] + sys.argv[1:]
 proc = subprocess.Popen(subprocessCommand, shell=True)
 try:
-    proc.wait(timeout=10)
+    proc.wait(timeout=5)
 except subprocess.TimeoutExpired:
     kill(proc.pid)
     sys.stderr.write("ERROR: Execution time limit exceeded")

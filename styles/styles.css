@@ -1,5 +1,7 @@
 .banner {
     height: 50px;
+    background-color: black;
+    overflow: hidden;
 }
 
 .body {
@@ -78,4 +80,13 @@
 
 .mediumHeightNav {
     height: 6vh;
+}
+
+.mainLogo {
+    height: 60px;
+    width: 60px;
+}
+
+.spinningCircle {
+    padding-right: 3px;
 }
