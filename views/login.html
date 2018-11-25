@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="uk-height-1-1">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Mobile phone support -->
+        <title>Login to Codelive</title>
+        <link rel="stylesheet" type="text/css" href="uikit/dist/css/uikit.min.css" />
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </head>
+    <body class="uk-height-1-1">
+        <div class="uk-flex uk-flex-center uk-flex-middle uk-background-secondary uk-height-viewport uk-light">
+            <div class="uk-width-medium uk-padding-small">
+                <div>
+                    <a href="/">
+                        <span uk-icon="icon: reply; ratio: 1.5" class="loginRegisterHome"></span>
+                    </a>
+                </div>
+                <div class="uk-text-center">
+                    <img src="logo_transparent.png" class="loginLogo"></img>
+                </div>
+                <form action="/login" method="POST" class="loginForm" >
+                    <fieldset class="uk-fieldset">
+                        <div class="loginMainText">Login</div>
+                        <div class="uk-margin">
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"></span>
+                                <input class="uk-input uk-form-medium" spellcheck="false" name="email" required placeholder="Email" type="text">
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+                                <input class="uk-input uk-form-medium" name="password" required placeholder="Password" type="password">
+                            </div>
+                        </div>
+                        
+                        <div class="uk-margin uk-text-center">
+                            <label>
+                                <input class="uk-checkbox loginCheckbox" checked="checked" name="loginCheckbox" type="checkbox"> Keep me logged in
+                            </label>
+                        </div>
+                        <% if (status != null && status.length > 0) { %>
+                            <div class="registrationError">
+                                <%- status %>
+                            </div>
+                        <% } %>
+                        <div class="uk-margin">
+                            <button type="submit" class="uk-button uk-button-primary uk-button-medium uk-width-1-1">LOG IN</button>
+                        </div>
+                    </fieldset>
+                </form>
+                <div>
+                    <div class="uk-text-center">
+                        <a class="uk-link-reset uk-text-small" data-uk-toggle="target: #recover;animation: uk-animation-slide-top-small"><i>Forgot your password?</i></a>
+                    </div>
+                    <div class="uk-margin-small-top" id="recover" hidden>
+                        <form action="login-dark.html">
+                            
+                            <div class="uk-margin-small">
+                                <div class="uk-inline uk-width-1-1">
+                                    <span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: mail"></span>
+                                    <input class="uk-input" placeholder="E-mail" required type="text">
+                                </div>
+                            </div>
+                            <div class="uk-margin-small">
+                                <button type="submit" class="uk-button uk-button-primary uk-width-1-1">SEND PASSWORD</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- JS FILES -->
+        <script src="uikit/dist/js/uikit.min.js"></script>
+        <script src="uikit/dist/js/uikit-icons.min.js"></script>
+    </body>
+</html>

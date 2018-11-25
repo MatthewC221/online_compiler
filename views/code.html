@@ -2,6 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Mobile phone support -->
     <title>Demo</title>
     <link rel="stylesheet" type="text/css" href="uikit/dist/css/uikit.min.css" />
     <link rel=stylesheet type="text/css" href="doc/docs.css">
@@ -23,7 +25,7 @@
     <div class="uk-width uk-text-center">
         <div class="uk-background-secondary uk-light banner">
             <a href="/">
-                <img src="logo.png" class="mainLogo"></img>
+                <img src="logo_transparent.png" class="mainLogo"></img>
             </a>
         </div>
     </div>
@@ -48,23 +50,23 @@
             <input class="uk-input smallHeightArgs" type="text" id="args" placeholder="Command line args">
             <div class="uk-text-center">
                 <button id="runArgs" class="runProgramButtons">
-                    <span uk-icon="play"></span>
+                    <span uk-icon="icon: play; ratio: 1.2"></span>
                 </button>
                 <button class="runProgramButtons">
-                    <span uk-icon="code"></span>
+                    <span uk-icon="icon: code; ratio: 1.2"></span>
                 </button>
                 <button class="runProgramButtons">
-                    <span uk-icon="bolt"></span>
+                    <span uk-icon="icon: bolt; ratio: 1.2"></span>
                 </button>
                 <button class="runProgramButtons">
-                    <span uk-icon="info"></span>
+                    <span uk-icon="icon: info; ratio: 1.2"></span>
                 </button>
             </div>
         </div>
         <div class="uk-width-1-2">
             <textarea class="uk-textarea codeOutput" rows="5" id="output" readonly></textarea>
-            <span uk-icon="minus-circle" id="nonSpinningCircle"></span>
-            <span uk-spinner="ratio: 0.6" id="spinningCircle" class="spinningCircle" style="display: none"></span>
+            <span uk-icon="icon: minus-circle; ratio: 1.2" id="nonSpinningCircle"></span>
+            <span uk-spinner="ratio: 0.75" id="spinningCircle" class="spinningCircle" style="display: none"></span>
             <div class="uk-text-meta executionInfo">Execution state: 
                 <div class="uk-text-meta executionInfo" id="executionState"> 
                 </div>

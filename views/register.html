@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" class="uk-height-1-1">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Mobile phone support -->
+        <title>Login to Codelive</title>
+        <link rel="stylesheet" type="text/css" href="uikit/dist/css/uikit.min.css" />
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </head>
+    <body class="uk-height-1-1">
+        <div class="uk-flex uk-flex-center uk-flex-middle uk-background-secondary uk-height-viewport uk-light">
+            <div class="uk-width-medium uk-padding-small">
+                <div>
+                    <a href="/">
+                        <span uk-icon="icon: reply; ratio: 1.5" class="loginRegisterHome"></span>
+                    </a>
+                </div>
+                <div class="uk-text-center">
+                    <img src="logo_transparent.png" class="registerLogo"></img>
+                </div>
+                <form action="/register" method="POST" class="loginForm">
+                    <fieldset class="uk-fieldset">
+                        <div class="registerMainText">      Register to access lessons and save code
+                        </div>
+                        <div class="uk-margin-small">
+                            Username: 
+                            <div class="uk-inline uk-width-1-1 tooltip">
+                                <span class="tooltiptext">5-15 alphanumeric characters</span>
+                                <span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user">
+                                </span>
+                                <input class="uk-input uk-form-medium" spellcheck="false" type="text" name="username" novalidate required>
+                            </div>
+                        </div>
+                        <div class="uk-margin-small">
+                            Email: 
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: mail">
+                                </span>
+                                <input class="uk-input uk-form-medium" spellcheck="false" name="email" type="text">
+                            </div>
+                        </div>
+                        <div class="uk-margin-small">
+                            Password:
+                            <div class="uk-inline uk-width-1-1 tooltip">
+                                <span class="tooltiptext">Minimum 8 characters with at least 1 number and 1 special character</span>
+                                <span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+                                <input class="uk-input uk-form-medium" required name="password" type="password">
+                            </div>
+                        </div>
+                        
+                        <div class="uk-margin-collapsed">
+                            Confirm password:
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+                                <input class="uk-input uk-form-medium" required name="confirmPassword" type="password">
+                            </div>
+                        </div>
+                        <% if (status != null && status.length > 0) { %>
+                            <div class="registrationError">
+                                <%- status %>
+                            </div>
+                        <% } %>
+                        <div class="uk-margin-collapsed">
+                            <button type="submit" class="uk-button uk-button-primary uk-button-medium uk-width-1-1">Register</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <!-- JS FILES -->
+        <script src="uikit/dist/js/uikit.min.js"></script>
+        <script src="uikit/dist/js/uikit-icons.min.js"></script>
+    </body>
+</html>

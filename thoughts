@@ -1,10 +1,3 @@
-TODO BUGS:
-- Fix case of not print stderr:
-while (1):
-    print "!"
-
-- What's up with the extra new line in printing on windows, legitimately weird
-
 12/11/18
 
 Concerns about multi file projects, writing all of files to environment and executing. What's the latency for that?
@@ -15,3 +8,10 @@ Where can we store the lesson, in a database?
 16/11/18
 
 Thinking of definitely scrapping the multiple files for MVP, exercises should be one file for now.
+
+25/11/18
+Monetisation possibilities: 
+    - Infrastructure for online universities (Coursera, Udemy, etc.)
+    - Infrastructure for real universities
+    - Infrastructure for small coding colleges
+    - Content creation and courses

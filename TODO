@@ -1,0 +1,11 @@
+TODO
+
+BUGS:
+- Fix case of not print stderr:
+while (1):
+    print "!"
+
+- What's up with the extra new line in printing on windows, legitimately weird
+
+FUNCTIONALITY:
+Not maintaining session functionality (keep me logged in)
