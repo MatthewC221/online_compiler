@@ -7,8 +7,8 @@
     <title>Demo</title>
     <link rel="stylesheet" type="text/css" href="uikit/dist/css/uikit.min.css" />
     <link rel=stylesheet type="text/css" href="doc/docs.css">
-    <link rel="stylesheet" type="text/css" href="styles.css" />
     <link rel="stylesheet" type="text/css" href="lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
     <script src="lib/codemirror.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="uikit/dist/js/uikit.min.js"></script>
@@ -22,26 +22,48 @@
     <script src="addon/edit/matchbrackets.js"></script>
 </head>
 <body style="background-color: white">
-    <div class="uk-width uk-text-center">
+    <div class="uk-width">
         <div class="uk-background-secondary uk-light banner">
-            <a href="/">
-                <img src="logo_transparent.png" class="mainLogo"></img>
+            <div class="codeNavigationDropdown">
+                <a class="uk-link-text" href="#offcanvas-slide" uk-icon="icon: menu; ratio: 1.5" uk-toggle></a>
+            </div>
+            <div id="offcanvas-slide" uk-offcanvas>
+                <div class="uk-offcanvas-bar">
+                    <ul class="uk-nav uk-nav-default">
+                        <li>
+                            <a href="#offcanvas-slide" class="uk-link-text" uk-icon="icon: arrow-left; ratio: 1.5" uk-toggle></a>
+                        </li>
+                        <li><a href="/">Home</a></li>
+                        <li class="uk-active"><a href="/code">Code</a></li>
+                        <li><a href="#">Courses</a></li>
+                        <li><a href="#">Saved code</a></li>
+                        <li class="uk-nav-divider"></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+            <a href="/" class="mainLogo">
+                <img src="logo_transparent.png"></img>
             </a>
         </div>
     </div>
-    <nav class="uk-navbar-container default-navbar mediumHeightNav" uk-navbar>
-        <div class="uk-navbar-left">
-            <ul class="uk-navbar-nav">
-                <li><a href="/">Save</a></li>
-            </ul>
+    <div class="uk-grid">
+        <div class="uk-width-1-2">
+            <span uk-icon="icon: file-edit; ratio: 1.0"></span>
+            <input maxlength="15" class="uk-form-small codeFileName" name="fileName" id="fileName" type="text" placeholder="Untitled" spellcheck="false">
         </div>
-        <div class="uk-navbar-right">
-            <ul class="uk-navbar-nav">
-                <li class="uk-active"><a href="/code">Start coding</a></li>
-                <li><a href="#">Item</a></li>
-            </ul>
+        <div class="uk-width-1-2">
+            <div class="uk-text-meta languageSelectContainer">
+                Language:
+                <select class="languageSelect uk-select uk-form-width-xsmall uk-form-small" id="programmingLanguage">
+                    <option value="0">Python</option>
+                    <option value="1">C</option>
+                    <option value="2">C++</option>
+                </select>
+            </div>
         </div>
-    </nav>
+    </div>
     <div class="uk-grid-collapse" uk-grid>
         <div class="uk-width-1-2 codeEditor">
             <section id=demo>
@@ -49,14 +71,14 @@
             </section>
             <input class="uk-input smallHeightArgs" type="text" id="args" placeholder="Command line args">
             <div class="uk-text-center">
+                <button id="saveButton" class="runProgramButtons">
+                    <span uk-icon="icon: upload; ratio: 1.2"></span>
+                </button>
                 <button id="runArgs" class="runProgramButtons">
                     <span uk-icon="icon: play; ratio: 1.2"></span>
                 </button>
                 <button class="runProgramButtons">
                     <span uk-icon="icon: code; ratio: 1.2"></span>
-                </button>
-                <button class="runProgramButtons">
-                    <span uk-icon="icon: bolt; ratio: 1.2"></span>
                 </button>
                 <button class="runProgramButtons">
                     <span uk-icon="icon: info; ratio: 1.2"></span>
@@ -76,9 +98,32 @@
     <script type="module">
         import './keymap/sublime.js';
         import './addon/comment/comment.js';
-        var PYTHON_RUNNER = "python ./main.py ";
-        var DISPLAY_NONE = "display: none";
+        var PYTHON_RUNNER        = "python ./main.py ";
+        var DISPLAY_NONE         = "display: none";
         var DISPLAY_INLINE_BLOCK = "display: inline-block";
+
+        $(window).bind('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch (String.fromCharCode(event.which).toLowerCase()) {
+                case 's':
+                    saveCode();
+                    event.preventDefault();
+                    break;
+                }
+            }
+        });
+
+        $("#saveButton").click(function() {
+            saveCode();
+        });
+
+        function saveCode() {
+            var fileName = document.getElementById("fileName").value;
+            var languageSelect = document.getElementById("programmingLanguage");
+            var language = languageSelect.options[languageSelect.selectedIndex].text;
+            alert("Saving " + fileName + ", language = " + language);
+        }
+
         var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), 
         {
             lineNumbers: true,

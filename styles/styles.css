@@ -34,6 +34,13 @@
 }
 /*.CodeMirror-scroll { max-height: 200px; }*/
 
+.codeFileName {
+    border: none;
+    font-style: italic;
+    outline-width: 0;
+    margin-left: -5px;
+}
+
 .CodeMirror pre { 
     padding-left: 7px; 
     line-height: 1.25; 
@@ -49,6 +56,23 @@
     min-height: 80vh;
     font-size: 14px;
     display: block;
+}
+
+.languageSelect {
+    border: none;
+    display: inline-block;
+}
+
+.languageSelectContainer {
+    float: right;
+}
+
+.codeNavigationDropdown {
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    left: 0;
+    position: absolute;
 }
 
 .uk-textarea {
@@ -86,6 +110,9 @@
 .mainLogo {
     height: 60px;
     width: 60px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .spinningCircle {

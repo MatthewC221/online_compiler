@@ -43,9 +43,6 @@ module.exports = (function(app) {
     });
 
     app.get("/", function (req, res) {
-        if (req.user) {
-            console.log(req.user.email);
-        }
         res.render("index");
     });
 
