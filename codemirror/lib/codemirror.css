@@ -4,10 +4,10 @@
   /* Set height, width, borders, and global font properties here */
   font-family: monospace;
   font-size: 13px;
-  height: 75vh;
+  height: 80vh;
   color: black;
   direction: ltr;
-  margin-bottom: -25px;
+  /*margin-bottom: -25px;*/
 }
 
 /* PADDING */

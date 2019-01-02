@@ -46,16 +46,15 @@
     line-height: 1.25; 
 }
 
-.codeEditor {
-    margin-top: -22px;
-    display: block;
+.codeOutputStatus {
+    padding-top: 0px;
+    height: 84.5vh;
+    font-size: 14px;
+    /*display: block;*/
 }
 
-.codeOutput {
-    padding-top: 0px;
-    min-height: 80vh;
-    font-size: 14px;
-    display: block;
+.codeStdout {
+    height: 100%;
 }
 
 .languageSelect {

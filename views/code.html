@@ -66,9 +66,7 @@
     </div>
     <div class="uk-grid-collapse" uk-grid>
         <div class="uk-width-1-2 codeEditor">
-            <section id=demo>
-                <textarea id=codeEditor autofocus style="display: none"></textarea>
-            </section>
+            <textarea id=codeEditor autofocus style="display: none"></textarea>
             <input class="uk-input smallHeightArgs" type="text" id="args" placeholder="Command line args">
             <div class="uk-text-center">
                 <button id="saveButton" class="runProgramButtons">
@@ -85,8 +83,8 @@
                 </button>
             </div>
         </div>
-        <div class="uk-width-1-2">
-            <textarea class="uk-textarea codeOutput" rows="5" id="output" readonly></textarea>
+        <div class="uk-width-1-2 codeOutputStatus">
+            <textarea class="uk-textarea codeStdout" id="output" readonly></textarea>
             <span uk-icon="icon: minus-circle; ratio: 1.2" id="nonSpinningCircle"></span>
             <span uk-spinner="ratio: 0.75" id="spinningCircle" class="spinningCircle" style="display: none"></span>
             <div class="uk-text-meta executionInfo">Execution state: 

@@ -1,88 +1,102 @@
+var AWS         = require("aws-sdk");
 var Promise     = require('promise');
 var bcrypt      = require('bcrypt');
-var mongo       = require('mongodb');
-var MongoClient = require('mongodb').MongoClient;
-var url         = "mongodb://localhost";
 
-var Client;
-var Codelivedb;
-var SALT_ROUNDS = 10;
-
-MongoClient.connect(url, { useNewUrlParser: true }) 
-.then (function (client) {
-    Client     = client;
-    Codelivedb = client.db("codelivedb");
-    console.log("Connected to mongodb on localhost");
-})
-.catch (function (err) {
-    console.log(err);
+AWS.config.update({
+    region: "us-west-2",
+    endpoint: "http://localhost:8000"
 });
 
-var USER_COLLECTION = "Users";
+var dynamodb = new AWS.DynamoDB.DocumentClient();
+
+var SALT_ROUNDS = 10;
+var USER_TABLE = "Users";
+
 module.exports = {
-    attemptLogin: function (email, password) {
-        var usersCollection = Codelivedb.collection(USER_COLLECTION);
-        var successfulUser;
-        return new Promise (function (resolve, reject) {
-            usersCollection.findOne({'email': email}, function (err, user) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(user);
-                }
-            }); 
-        }).then(function (user) {
-            if (!user) {
-                throw new Error("User doesn't exist");
-            }
-            successfulUser = user;
-            return bcrypt.compare(password, user.password);
-        }).then (function (res) {
-            if (res) {
-                return successfulUser;
-            } else {
-                throw new Error("Incorrect password");
-            }
-        }).catch(function (rej) {
-            console.log(rej);
-            return null;
-        });
-    },
-    // Unique username and unique email
     attemptRegistration: function (username, email, password) {
-        var usersCollection = Codelivedb.collection(USER_COLLECTION);
+        var emailRegistered = {
+            TableName: USER_TABLE,
+            KeyConditionExpression: "email = :registerEmail",
+            ExpressionAttributeValues: {
+                ":registerEmail": email
+            },
+        };
         return new Promise (function (resolve, reject) {
-            usersCollection.findOne({$or: [{"email": email}, 
-                {"username": username}]}, function (err, user) {
+            dynamodb.query(emailRegistered, function (err, data) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(user);
+                    resolve(data);
                 }
             });
-        }).then(function (user) {
-            if (user) {
-                throw new Error("Abort chain: user already exists");
+        }).then(function (data) {
+            if (data && data.Count) {
+                throw new Error("Abort chain: email already registered");
             }
             return bcrypt.hash(password, SALT_ROUNDS);
         }).then(function (hash) {
             var registrationDate = new Date();
             var newUser = {
-                username: username,
-                password: hash,
-                registrationDate: registrationDate,
-                teacherOf: [],      
-                studentOf: [],
-                teacher: true,      // Able to create courses
-                recoveryCode: "", 
-                email: email
+                TableName: USER_TABLE,
+                Item: {
+                    "username": username,
+                    "password": hash,
+                    "dateRegistered": registrationDate.toISOString(),
+                    "teacherOf": [],      
+                    "studentOf": [],
+                    "teacher": true,      // Able to create courses
+                    "recoveryCode": "tmp", 
+                    "email": email
+                }
             };
-            return usersCollection.insertOne(newUser);
-        }).then(function (err, res) {
+            dynamodb.put(newUser, function(err, data) {
+                if (err) {
+                    throw new Error("Abort chain: insertion failed");
+                } 
+            });
             return true;
         }).catch(function (rej) {
             console.log(rej);
             return null;
         });                   
+    },
+
+    attemptLogin: function (email, password) {
+        var user = null;
+        var params = {
+            TableName: USER_TABLE,
+            KeyConditionExpression: "email = :registerEmail",
+            ExpressionAttributeValues: {
+                ":registerEmail": email
+            },
+        };
+        return new Promise (function (resolve, reject) {
+            dynamodb.query(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).then(function (data) {
+            if (data && data.Count == 1) {
+                user = data["Items"];
+                console.log(data["Items"][0]["password"]);
+            } else {
+                throw new Error("Abort chain: email not registered");
+            }
+            return bcrypt.compare(password, data["Items"][0]["password"]);
+        }).then(function (res, err) {
+            if (err) {
+                throw new Error("Abort chain: Unexpected error");
+            } else {
+                if (res) {
+                    return user;
+                }
+            }
+        }).catch(function (rej) {
+            console.log(rej);
+            return null;
+        });
     }
 }
