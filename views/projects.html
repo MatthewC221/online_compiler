@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Mobile phone support -->
+    <title>Demo</title>
+    <link rel="stylesheet" type="text/css" href="uikit/dist/css/uikit.min.css" />
+    <link rel=stylesheet type="text/css" href="doc/docs.css">
+    <link rel="stylesheet" type="text/css" href="lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <script src="lib/codemirror.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="uikit/dist/js/uikit.min.js"></script>
+    <script src="uikit/dist/js/uikit-icons.min.js"></script>
+    <script src="lib/codemirror.js"></script>
+    <script src="mode/python/python.js"></script>
+    <script src="mode/xml/xml.js"></script>
+    <script src="mode/javascript/javascript.js"></script>
+    <script src="mode/css/css.js"></script>
+    <script src="mode/htmlmixed/htmlmixed.js"></script>
+    <script src="addon/edit/matchbrackets.js"></script>
+</head>
+<body style="background-color: white">
+    <div class="uk-width">
+        <div class="uk-background-secondary uk-light banner">
+            <div class="codeNavigationDropdown">
+                <a class="uk-link-text" href="#offcanvas-slide" uk-icon="icon: menu; ratio: 1.5" uk-toggle></a>
+            </div>
+            <div id="offcanvas-slide" uk-offcanvas>
+                <div class="uk-offcanvas-bar">
+                    <ul class="uk-nav uk-nav-default">
+                        <li>
+                            <a href="#offcanvas-slide" class="uk-link-text" uk-icon="icon: arrow-left; ratio: 1.5" uk-toggle></a>
+                        </li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/code">Code</a></li>
+                        <li><a href="#">Courses</a></li>
+                        <% if (user != null) { %>
+                            <script>
+                                var currentUser = "<%= user["email"] %>";
+                            </script>
+                            <li class="uk-active"><a href="/projects">Saved code</a></li>
+                            <li class="uk-nav-divider"></li>
+                            <li>Logged in as <%= user.username %></li>
+                            <li><a href="/logout">Log out</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+            <a href="/" class="mainLogo">
+                <img src="logo_transparent.png"></img>
+            </a>
+        </div>
+    </div>
+    <div class="uk-margin-top"></div>
+    <div class="uk-grid">
+        <div class="uk-margin-left"></div>
+        <div class="uk-grid-1-2">
+            <div class="uk-text-lead">Projects</div>
+            <table class="uk-table uk-table-divider">
+                <caption>Free code projects</caption>
+                <thead>
+                    <tr>
+                        <th>Project name</th>
+                        <th>Language</th>
+                        <th>Last modified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (typeof projects != 'undefined' && projects.length) { %>
+                        <% for (var i = 0; i < projects.length; i++) { %>
+                        <% var date = projects[i].dateModified.substring(0, 10) + " " + projects[i].dateModified.substring(11, 19); %>
+                        <tr>    
+                            <td>
+                                <a href="/load?project=<%= projects[i].fileName %>">
+                                <%= projects[i].fileName %></a>
+                            </td>
+                            <td><%= projects[i].programmingLanguage %></td>
+                            <td><%= date %></td>
+                        </tr>
+                        <% } %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>

@@ -43,11 +43,18 @@ module.exports = (function(app) {
     });
 
     app.get("/", function (req, res) {
-        res.render("index");
+        res.render("index", { user: req.user });
     });
 
     app.get("/code", function (req, res) {
-        res.render("code");
+        res.render("code", { 
+            user: req.user,
+        });
+    });
+
+    app.get("/logout", function (req, res) {
+        req.session.reset();
+        res.redirect("/");
     });
 
     app.get("/register", function (req, res) {
@@ -106,8 +113,8 @@ module.exports = (function(app) {
         login
         .then(function (user) {
             if (user) {
-                req.session.user = user;
-                res.render("code");
+                req.session.user = user[0];
+                res.redirect("code");
             } else {
                 res.render("login", 
                     { status: "Invalid user combination" });
@@ -139,15 +146,100 @@ module.exports = (function(app) {
                         contents = stdout;
                     }
                 }
-                var response = {
+                res.json({
                     status: 200,
                     success: "Code output success",
                     outputType: outputType,
                     contents: contents // stderr takes priority
-                }
-                res.end(JSON.stringify(response));
+                });
             });
         });
     });
+
+    app.post("/save", function (req, res) {
+        var fileExists = database.checkFileExists(req.user.email, 
+            req.body.file);
+        fileExists
+        .then(function (existFlag) {
+            if (existFlag == null) {
+                console.log("Unexpected error during save");
+            } else {
+                if (existFlag) {
+                    res.json({
+                        status: 409,
+                        message: "Request override of file name"
+                    });
+                } else {
+                    var save = database.saveNewFile(req.user.email, req.body.file, req.body.language, req.body.code);
+                    save
+                    .then(function (data) {
+                        res.json({
+                            status: 200,
+                            success: "File saved successfully"
+                        });
+                    }, errHandler);
+                }
+            }
+        }, errHandler);
+    });
+
+    app.post("/overwrite", function (req, res) {
+        var deleteFile = database.deleteFile(req.user["email"], req.body.file);
+        deleteFile
+        .then(function (data) {
+            if (!data) {
+                console.log("Unexpected error when updating");
+                return;
+            }
+        }).then (function () {
+            return database.saveNewFile(req.user.email, req.body.file, 
+                req.body.language, req.body.code);
+        }).then (function (data) {
+            res.json({
+                status: 200,
+                success: "File successfully overwritten"
+            });
+        }, errHandler);
+    });
+
+    app.get("/projects", function (req, res) {
+        if (!req.user) {
+            res.redirect("/");
+        } else {
+            var files = database.retrieveAllFiles(req.user.email);
+            files
+            .then(function (data) {
+                res.render("projects", { 
+                    user: req.user,
+                    projects: data.Items 
+                });
+            }, errHandler);
+        }
+    });
+
+    app.get("/load", function (req, res) {
+        if (!req.user) {
+            res.redirect("/");
+            return;
+        }
+        var query = url.parse(req.url, true).query;
+        if (query.project) {
+            var project = database.retrieveSingleProject(req.user.email,
+                query.project);
+            project
+            .then(function (projectData) {
+                if (!projectData) res.redirect("/projects");
+                res.render("code", { 
+                    user: req.user,
+                    fileName: encodeURI(projectData.fileName),
+                    code: encodeURI(projectData.code),
+                });
+            }, errHandler);
+        } else {
+            res.redirect("/projects");
+            return;
+        }
+    });
+
     return app;
 });

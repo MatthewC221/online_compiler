@@ -11,6 +11,7 @@ var dynamodb = new AWS.DynamoDB.DocumentClient();
 
 var SALT_ROUNDS = 10;
 var USER_TABLE = "Users";
+var FREE_CODE = "FreeCode";
 
 module.exports = {
     attemptRegistration: function (username, email, password) {
@@ -81,7 +82,6 @@ module.exports = {
         }).then(function (data) {
             if (data && data.Count == 1) {
                 user = data["Items"];
-                console.log(data["Items"][0]["password"]);
             } else {
                 throw new Error("Abort chain: email not registered");
             }
@@ -93,6 +93,139 @@ module.exports = {
                 if (res) {
                     return user;
                 }
+            }
+        }).catch(function (rej) {
+            console.log(rej);
+            return null;
+        });
+    },
+
+    checkFileExists: function (email, fileName) {
+        var params = {
+            TableName: FREE_CODE,
+            Key: {
+                "email": email,
+                "fileName": fileName
+            }
+        };
+        return new Promise (function (resolve, reject) {
+            dynamodb.get(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).then(function (data) {
+            if (data && data.Item) {
+                return true;
+            } else {
+                return false;
+            }
+        }).catch(function (rej) {
+            console.log(rej);
+            return null;
+        });
+    },
+
+    saveNewFile: function (email, fileName, language, code) {
+        var dateModified = new Date();
+        var params = {
+            TableName: FREE_CODE,
+            Item: {
+                "email": email,
+                "fileName": fileName,
+                "dateModified": dateModified.toISOString(),
+                "readers": [],
+                "code": code,
+                "programmingLanguage": language
+            }
+        };
+        return new Promise (function (resolve, reject) {
+            dynamodb.put(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).then(function (data) {
+            return true;
+        }).catch(function (rej) {
+            console.log(rej);
+            return null;
+        });
+    },
+
+    deleteFile: function (email, fileName) {
+        var params = {
+            TableName: FREE_CODE,
+            Key: {
+                "email": email,
+                "fileName": fileName
+            }
+        };
+        return new Promise (function (resolve, reject) {
+            dynamodb.delete(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).then(function (data) {
+            return true;
+        }).catch(function (rej) {
+            console.log(rej);
+            return null;
+        });
+    },
+
+    retrieveAllFiles: function (email) {
+        var params = {
+            TableName: FREE_CODE,
+            KeyConditionExpression: "email = :registerEmail",
+            ExpressionAttributeValues: {
+                ":registerEmail": email
+            },
+        };
+        return new Promise (function (resolve, reject) {
+            dynamodb.query(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).then(function (data) {
+            return data;
+        }).catch(function (rej) {
+            console.log(rej);
+            return null;
+        });
+    },
+
+    retrieveSingleProject: function (email, fileName) {
+        var params = {
+            TableName: FREE_CODE,
+            Key: {
+                "email": email,
+                "fileName": fileName
+            }
+        };
+        return new Promise (function (resolve, reject) {
+            dynamodb.get(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).then(function (data) {
+            if (data && data.Item) {
+                return data.Item;
+            } else {
+                return null;
             }
         }).catch(function (rej) {
             console.log(rej);

@@ -1,11 +1,21 @@
 SCHEMAS
 
 USER_TABLE
-"username": String
+"username": String          PARTITION_KEY
 "password": String
 "dateRegistered": String
-"teacherOf": List,      // Teacher of courses
-"studentOf": List,      // Student of courses
-"teacher": Boolean,      // Able to create courses
+"teacherOf": List,          // Teacher of courses
+"studentOf": List,          // Student of courses
+"teacher": Boolean,         // Able to create courses
 "recoveryCode": String, 
-"email": String
+"email": String             SORT_KEY
+
+FREE_CODE
+"email": String,                    PARTITION_KEY
+"fileName": String,                 SORT_KEY
+"dateModified": ISO_date_string
+"readers": List,
+"code": String,
+"projectSettings": {
+    "language": String
+}

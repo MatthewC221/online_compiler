@@ -1,7 +1,4 @@
-/icons/*
 /node_modules/*
-/uikit/*
-/codemirror/*
 !/codemirror/lib/codemirror.css
 /package-lock.json
 /exe/*

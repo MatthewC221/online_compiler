@@ -36,10 +36,30 @@
                         <li><a href="/">Home</a></li>
                         <li class="uk-active"><a href="/code">Code</a></li>
                         <li><a href="#">Courses</a></li>
-                        <li><a href="#">Saved code</a></li>
-                        <li class="uk-nav-divider"></li>
-                        <li><a href="/register">Register</a></li>
-                        <li><a href="/login">Login</a></li>
+                        <script>
+                            var currentUser      = null;
+                            var previousFilename = "";
+                            var code             = "";
+                        </script>
+                        <% if (user != null) { %>
+                            <% if (locals.fileName) { %>
+                                <script>
+                                    previousFilename = "<%= fileName %>";
+                                    code             = "<%= code %>";
+                                </script>
+                            <% } %>
+                            <script>
+                                var currentUser = "<%= user.email %>";
+                            </script>
+                            <li><a href="/projects">Saved code</a></li>
+                            <li class="uk-nav-divider"></li>
+                            <li>Logged in as <%= user["username"] %></li>
+                            <li><a href="/logout">Log out</a></li>
+                        <% } else { %>
+                            <li class="uk-nav-divider"></li>
+                            <li><a href="/register">Register</a></li>
+                            <li><a href="/login">Login</a></li>
+                        <% } %>
                     </ul>
                 </div>
             </div>
@@ -52,6 +72,7 @@
         <div class="uk-width-1-2">
             <span uk-icon="icon: file-edit; ratio: 1.0"></span>
             <input maxlength="15" class="uk-form-small codeFileName" name="fileName" id="fileName" type="text" placeholder="Untitled" spellcheck="false">
+            <span id="saveStatus" class="saveStatus"></span>
         </div>
         <div class="uk-width-1-2">
             <div class="uk-text-meta languageSelectContainer">
@@ -68,10 +89,17 @@
         <div class="uk-width-1-2 codeEditor">
             <textarea id=codeEditor autofocus style="display: none"></textarea>
             <input class="uk-input smallHeightArgs" type="text" id="args" placeholder="Command line args">
+
             <div class="uk-text-center">
+                <% if (user != null) { %>
                 <button id="saveButton" class="runProgramButtons">
                     <span uk-icon="icon: upload; ratio: 1.2"></span>
                 </button>
+                <% } else { %>
+                    <button id="saveButton" class="runProgramButtons" disabled>
+                        <span uk-icon="icon: upload; ratio: 1.2"></span>
+                    </button>
+                <% } %>
                 <button id="runArgs" class="runProgramButtons">
                     <span uk-icon="icon: play; ratio: 1.2"></span>
                 </button>
@@ -92,6 +120,15 @@
                 </div>
             </div>
         </div>
+        <div id="confirmOverrideModal" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+                <p class="modalText">Overwrite existing file?</p>
+                <p class="uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                    <button class="uk-button uk-button-danger" type="button" id="overwriteFile">Overwrite</button>
+                </p>
+            </div>
+        </div>
     </div>
     <script type="module">
         import './keymap/sublime.js';
@@ -99,29 +136,14 @@
         var PYTHON_RUNNER        = "python ./main.py ";
         var DISPLAY_NONE         = "display: none";
         var DISPLAY_INLINE_BLOCK = "display: inline-block";
+        var ERROR_TEXT           = "color: #D8000C";
+        var SUCCESS_TEXT         = "color: #4F8A10";
+        var INFO_TEXT            = "color: #00529B";
+        var ALPHANUMERIC_REGEX   = /^[a-z0-9]+$/i;
+        var HTTP_CODE_OK         = 200;
+        var HTTP_CODE_CONFLICT   = 409;
 
-        $(window).bind('keydown', function(event) {
-            if (event.ctrlKey || event.metaKey) {
-                switch (String.fromCharCode(event.which).toLowerCase()) {
-                case 's':
-                    saveCode();
-                    event.preventDefault();
-                    break;
-                }
-            }
-        });
-
-        $("#saveButton").click(function() {
-            saveCode();
-        });
-
-        function saveCode() {
-            var fileName = document.getElementById("fileName").value;
-            var languageSelect = document.getElementById("programmingLanguage");
-            var language = languageSelect.options[languageSelect.selectedIndex].text;
-            alert("Saving " + fileName + ", language = " + language);
-        }
-
+        document.getElementById("fileName").value = decodeURI(previousFilename);
         var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), 
         {
             lineNumbers: true,
@@ -138,7 +160,9 @@
                 singleLineStringErrors: false
             },
         });
-
+        code = code.replace(/&#39;/g, "\'");
+        code = code.replace(/&amp;/g, "\&");
+        editor.getDoc().setValue(decodeURI(code));
         $("#runArgs").click(function() {
             var args = document.getElementById("args").value;
             document.getElementById("runArgs").disabled = true;
@@ -172,6 +196,87 @@
                 }
             });
         });
+
+        $(window).bind('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch (String.fromCharCode(event.which).toLowerCase()) {
+                case 's':
+                    saveCode(false);
+                    event.preventDefault();
+                    break;
+                }
+            }
+        });
+
+        $("#saveButton").click(function() {
+            saveCode(false);
+        });
+
+        // This button is on the modal 
+        $("#overwriteFile").click(function() {
+            UIkit.modal("#confirmOverrideModal").hide();
+            saveCode(true);
+        });
+
+        function saveCode(override) {
+            var languageSelect = document.getElementById("programmingLanguage");
+            var fileName = document.getElementById("fileName").value;
+            if (!isProjectValid(fileName)) return;
+            var route = "";
+            // If override flag is set, the user has confirmed writing over file
+            if (override || previousFilename == fileName) {
+                route = "/overwrite";
+            } else {
+                route = "/save";
+            }
+            document.getElementById("saveStatus").textContent = "Saving...";
+            document.getElementById("saveStatus").style = INFO_TEXT;
+            $.ajax({
+                type: "POST",
+                url: route, 
+                data: {
+                    "code": editor.getValue(),
+                    "file": document.getElementById("fileName").value,
+                    "language": languageSelect.options[languageSelect.selectedIndex].text,
+                },
+                success: function (result) {
+                    if (result.status == HTTP_CODE_OK) {
+                        previousFilename = fileName;
+                        document.getElementById("saveStatus").textContent = "Save successful";
+                        document.getElementById("saveStatus").style = SUCCESS_TEXT;
+                    } else if (result.status == HTTP_CODE_CONFLICT) {
+                        UIkit.modal("#confirmOverrideModal").show();
+                    } else {
+                        alert ("Unexpected save error");
+                    }
+                }, 
+            });
+        }
+
+        function isProjectValid(fileName) {
+            if (!currentUser) {
+                document.getElementById("saveStatus").textContent = "Login to use save / load";
+                document.getElementById("saveStatus").style = ERROR_TEXT;
+                return false;
+            }
+
+            if (!ALPHANUMERIC_REGEX.test(fileName)) {
+                document.getElementById("saveStatus").textContent = "Alphanumeric project name only";
+                document.getElementById("saveStatus").style = ERROR_TEXT;
+                return false;
+            }
+            if (!editor.getValue().length) {
+                document.getElementById("saveStatus").textContent = "Empty project to save";
+                document.getElementById("saveStatus").style = ERROR_TEXT;
+                return false;
+            }
+            if (fileName.length == 0) {
+                document.getElementById("saveStatus").textContent = "Invalid save name";
+                document.getElementById("saveStatus").style = ERROR_TEXT;
+                return false;
+            }
+            return true;
+        }
     </script>
 </body>
 </html>

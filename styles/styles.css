@@ -114,6 +114,11 @@
     margin-right: auto;
 }
 
+.modalText {
+    font-size: 18px;
+    display: inline;
+}
+
 .spinningCircle {
     padding-right: 3px;
 }
@@ -148,6 +153,10 @@
 .registerLogo {
     height: 50%;
     width: 50%;
+}
+
+.saveStatus {
+    font-size: 14px;
 }
 
 /* Tooltip container */
