@@ -25,7 +25,7 @@ app.set('trust proxy', 1);
 var port = process.env.PORT || 1444;
 
 app.listen(port, function() {
-    console.log('Live at http://localhost:3333/');
+    console.log('Live');
 });
 
-http.createServer(app).listen(3333);
+http.createServer(app).listen(3000);

@@ -1,17 +1,25 @@
-var AWS         = require("aws-sdk");
+var AWS         = require('aws-sdk');
 var Promise     = require('promise');
 var bcrypt      = require('bcrypt');
+var fs          = require('fs');
 
-AWS.config.update({
-    region: "us-west-2",
-    endpoint: "http://localhost:8000"
-});
+var env = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+if (env.projectSettings.environment == 'development') {
+    AWS.config.update({
+        region: env.projectSettings.region,
+        endpoint: env.projectSettings.endpoint
+    });
+} else {
+    AWS.config.update({
+        region: env.projectSettings.region
+    });
+}
 
 var dynamodb = new AWS.DynamoDB.DocumentClient();
 
 var SALT_ROUNDS = 10;
-var USER_TABLE = "Users";
-var FREE_CODE = "FreeCode";
+var USER_TABLE  = "Users";
+var FREE_CODE   = "FreeCode";
 
 module.exports = {
     attemptRegistration: function (username, email, password) {
