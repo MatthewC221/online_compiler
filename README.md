@@ -7,16 +7,16 @@ exercises could be put.
 I thought since I worked on it I might as well show it here.
 
 ## Functionality
-** A pseudo-IDE for Python language **
+**A pseudo-IDE for Python language**
 - Command line arguments
 - Standard output / standard error displayed
 - Limited execution time
 
 ## Demo
-![alt text](https://github.com/MatthewC221/online_compiler/blob/deployment/media/fibonacciDemo.gif)
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/fibonacciDemo.gif" width="300" height="200">
 
-* Run-time errors *
-![alt text](https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG)
+*Run-time errors*
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="300" height="200">
 
-* Syntax / compile errors *
-![alt text](https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG)
+*Syntax / compile errors*
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="300" height="200">
