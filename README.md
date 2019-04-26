@@ -13,10 +13,11 @@ I thought since I worked on it I might as well show it here.
 - Limited execution time
 
 ## Demo
-<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/fibonacciDemo.gif" width="300" height="200">
+### Successful execution
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/fibonacciDemo.gif" width="900" height="600">
 
-*Run-time errors*
-<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="300" height="200">
+### Run-time errors
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="900" height="600">
 
-*Syntax / compile errors*
-<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="300" height="200">
+### Syntax / compile errors
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="900" height="600">
