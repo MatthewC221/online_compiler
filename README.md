@@ -17,7 +17,7 @@ I thought since I worked on it I might as well show it here.
 <img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/fibonacciDemo.gif" width="900" height="750">
 
 ### Run-time errors
-<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="900" height="650">
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="1200" height="900">
 
 ### Syntax / compile errors
-<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="900" height="600">
+<img src="https://github.com/MatthewC221/online_compiler/blob/deployment/media/runtimeFail.PNG" width="1200" height="900">
